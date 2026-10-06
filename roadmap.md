@@ -27,6 +27,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 ## Open decisions (human)
 - D1–D3 APPROVED 2026-10-06: Cloud on; we provide MQL5 EA; built-in AI via abstraction.
 - D4 APPROVED 2026-10-06: identifiers are UUID-only (DB-generated). No short codes, no sequences. Broker-side ids (MT5 login, broker ticket, broker symbol) live in scoped-unique text columns, never as keys.
+- D5 APPROVED 2026-10-06: platform Super-Admin = read-only across all users (account Bestrt67ss@gmail.com). No cross-user edits.
 - Pending: real broker/account to test against (needed in Phase 3).
 
 ## Backlog (deferred §73)

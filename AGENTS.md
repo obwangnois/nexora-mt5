@@ -19,3 +19,4 @@
 - Health tiles must show UNKNOWN/OFFLINE until a real heartbeat exists — never display stale or fake data as live.
 - Every table's primary key is a database-generated `uuid`; the auth user id doubles as `profiles.id`. Broker-side identifiers (MT5 login, ticket, broker symbol text) are ordinary scoped-unique text columns, never primary keys or join keys — internal keys stay unguessable and broker data stays comparable across accounts.
 - Broker credentials (passwords, API keys) are never stored in the database, logs or client state — they stay on the user's own machine running the EA.
+- Platform `admin` role is read-only across all tenants: SELECT-only RLS policies via `has_role(auth.uid(),'admin')`, no cross-tenant write policies — oversight without weakening per-user control. Admin is granted only by direct role insert, never from the UI.

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { auditQuery, profileQuery, rolesQuery } from "@/lib/control-plane";
 import { PageHeader } from "@/components/workstream-placeholder";
+import { AdminOverview } from "@/components/admin-overview";
 
 export const Route = createFileRoute("/_authenticated/more")({
   head: () => ({ meta: [{ title: "More — NEXORA MT5" }, { name: "description", content: "Profile, roles and audit trail." }] }),
@@ -29,6 +30,7 @@ function MorePage() {
           </div>
         ))}
       </section>
+      {roles.includes("admin") && <AdminOverview />}
       <section className="rounded-lg border bg-card p-5">
         <h2 className="font-medium">Audit trail</h2>
         <p className="mt-1 text-sm text-muted-foreground">Every control change is recorded automatically and cannot be edited.</p>

@@ -24,7 +24,7 @@ const NAV = [
   { to: "/ai", label: "nav.ai", icon: Cpu },
   { to: "/journal", label: "nav.journal", icon: BookOpen },
   { to: "/more", label: "nav.more", icon: MoreHorizontal },
-] as const satisfies readonly { label: TKey }[];
+] as const satisfies readonly { to: string; label: TKey; icon: unknown }[];
 
 function Shell() {
   const { user } = Route.useRouteContext();

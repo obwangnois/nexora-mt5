@@ -22,6 +22,13 @@
       "when": 1791295592934,
       "tag": "0002_fix_audit_boolean_flag",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791295921228,
+      "tag": "0003_platform_admin_readonly",
+      "breakpoints": true
     }
   ]
 }

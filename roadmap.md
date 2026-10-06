@@ -11,12 +11,12 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 - Default trading mode DATA ONLY; AUTO TRADE needs explicit activation.
 
 ## Workstreams (dependency order)
-1. [WAITING_APPROVAL] PROJECT FOUNDATION — enable Lovable Cloud, design system, app shell (HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE)
-2. [QUEUED] AUTH & MULTI-USER — roles OWNER/ADMIN/TRADER/VIEWER, tenant isolation
+1. [DONE] PROJECT FOUNDATION — enable Lovable Cloud, design system, app shell (HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE)
+2. [DONE] AUTH & MULTI-USER (Phase 1; team sharing → later) — roles OWNER/ADMIN/TRADER/VIEWER, tenant isolation
 3. [QUEUED] BROKER & ACCOUNT MANAGER — broker capability profiles, canonical symbols, per-account risk profiles
-4. [BLOCKED: needs MT5 EA/connector decision] MT5 CONNECTOR & MARKET DATA + quality gate
+4. [READY: approved — we supply MQL5 EA] MT5 CONNECTOR & MARKET DATA + quality gate
 5. [QUEUED] MARKET ANALYSIS & CHART SNAPSHOT
-6. [BLOCKED: needs NEXORA AI endpoint/contract] NEXORA AI INTEGRATION
+6. [READY: approved — built-in AI behind abstraction] NEXORA AI INTEGRATION
 7. [QUEUED] SIGNAL & VERSIONED TRADE PLAN ENGINE
 8. [QUEUED] RISK, EXPOSURE, NEWS/SESSION, CIRCUIT BREAKER
 9. [QUEUED] EXECUTION ENGINE — safety gate, state machine, idempotency, slippage
@@ -25,12 +25,13 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 12. [QUEUED] TESTING / SIMULATION / RELEASE (test matrix §72)
 
 ## Open decisions (human)
-- D1: Enable Lovable Cloud for auth/database (required for workstream 1–2).
-- D2: Local execution plane: the MT5 EA (MQL5) and local runtime run on the user's machine/VPS, outside this web app. Does an EA exist, or should we provide an MQL5 EA + API contract?
-- D3: NEXORA AI: existing service with an API, or should NEXORA MT5 use a built-in AI adapter behind the NEXORA AI contract for now?
+- D1–D3 APPROVED 2026-10-06: Cloud on; we provide MQL5 EA; built-in AI via abstraction.
+- Pending: real broker/account to test against (needed in Phase 3).
 
 ## Backlog (deferred §73)
 AI Marketplace, AI Tournament, Strategy Evolution, Autonomous Strategy Creation, Advanced Backtesting, Copy/Social Trading, Subscription/Strategy Marketplaces, Advanced Portfolio Optimization, Complex Quant Models.
 
 ## Checkpoint
-- CP0: Project state + architecture lock recorded. No code built yet. Next: D1–D3, then Workstream 1.
+- CP0: State + architecture lock recorded.
+- CP1 (Phase 1 DONE): email+Google sign-in; profiles, user_roles (OWNER default), control_state (DATA_ONLY default), audit_log; DB trigger locks AUTO/ULTIMATE modes, STOP AI TRADING never closes positions and is audited; shell nav HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE (desktop sidebar, mobile bottom bar).
+- NEXT: Phase 2 Broker & Account Manager (broker capability profiles, symbol mapping, per-account risk profiles).

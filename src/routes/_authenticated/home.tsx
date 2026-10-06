@@ -48,7 +48,10 @@ function HomePage() {
     setBusy(true);
     const { error } = await supabase.from("control_state").update(patch).eq("user_id", user.id);
     setBusy(false);
-    if (error) return toast.error(friendlyDbError(error.message));
+    if (error) {
+      toast.error(friendlyDbError(error.message));
+      return;
+    }
     toast.success(ok);
     qc.invalidateQueries({ queryKey: ["control_state", user.id] });
     qc.invalidateQueries({ queryKey: ["audit", user.id] });

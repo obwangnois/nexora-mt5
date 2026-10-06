@@ -14,16 +14,126 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          details: Json
+          entity: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          entity: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          entity?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      control_state: {
+        Row: {
+          ai_trading_halted: boolean
+          halted_at: string | null
+          trading_mode: Database["public"]["Enums"]["trading_mode"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_trading_halted?: boolean
+          halted_at?: string | null
+          trading_mode?: Database["public"]["Enums"]["trading_mode"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_trading_halted?: boolean
+          halted_at?: string | null
+          trading_mode?: Database["public"]["Enums"]["trading_mode"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "owner" | "admin" | "trader" | "viewer"
+      trading_mode:
+        | "data_only"
+        | "analysis"
+        | "signal"
+        | "auto_trade"
+        | "ultimate_auto"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +260,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["owner", "admin", "trader", "viewer"],
+      trading_mode: [
+        "data_only",
+        "analysis",
+        "signal",
+        "auto_trade",
+        "ultimate_auto",
+      ],
+    },
   },
 } as const

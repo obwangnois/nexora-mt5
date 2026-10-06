@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   accountsQuery, brokersQuery, RISK_FIELDS, riskProfilesQuery,
   symbolAliasesQuery, ACCOUNT_STATUS_LABEL,
-  type AccountWithBroker, type BrokerAccount, type RiskProfile, type RiskField,
+  type AccountWithBroker, type BrokerAccount, type RiskField, type RiskProfile, type RiskProfileUpdate,
 } from "@/lib/accounts";
 import { friendlyDbError, rolesQuery } from "@/lib/control-plane";
 import { PageHeader } from "@/components/workstream-placeholder";

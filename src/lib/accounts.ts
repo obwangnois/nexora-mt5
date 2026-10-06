@@ -4,10 +4,11 @@ import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-export type Broker = Database["public"]["tables"]["brokers"]["Row"];
-export type BrokerAccount = Database["public"]["tables"]["broker_accounts"]["Row"];
-export type RiskProfile = Database["public"]["tables"]["risk_profiles"]["Row"];
-export type SymbolAlias = Database["public"]["tables"]["symbol_aliases"]["Row"];
+export type Broker = Database["public"]["Tables"]["brokers"]["Row"];
+export type BrokerAccount = Database["public"]["Tables"]["broker_accounts"]["Row"];
+export type RiskProfile = Database["public"]["Tables"]["risk_profiles"]["Row"];
+export type RiskProfileUpdate = Database["public"]["Tables"]["risk_profiles"]["Update"];
+export type SymbolAlias = Database["public"]["Tables"]["symbol_aliases"]["Row"];
 export type AccountStatus = BrokerAccount["status"];
 
 export type BrokerSummary = Pick<

@@ -8,6 +8,7 @@ import { connectionState, healthQuery, tokenQuery } from "@/lib/market-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 const stateClass = {
   HEALTHY: "border-primary/40 text-primary",
@@ -18,6 +19,7 @@ const stateClass = {
 
 export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string; accountId: string; readOnly: boolean }) {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data: token } = useQuery(tokenQuery(userId, accountId));
   const { data: health = [] } = useQuery(healthQuery(userId));
   const [fresh, setFresh] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
   const conn = connectionState(h);
 
   async function issue() {
-    if (token && !confirm("Issuing a new token disconnects the bridge using the old one. Continue?")) return;
+    if (token && !confirm(t("bridge.replaceQ"))) return;
     setBusy(true);
     const { data, error } = await supabase.rpc("issue_connector_token", { p_account_id: accountId });
     setBusy(false);
@@ -40,13 +42,13 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
   }
 
   async function revoke() {
-    if (!confirm("Revoke the token? The bridge stops reporting until a new token is set.")) return;
+    if (!confirm(t("bridge.revokeQ"))) return;
     setBusy(true);
     const { error } = await supabase.rpc("revoke_connector_token", { p_account_id: accountId });
     setBusy(false);
     if (error) { toast.error(friendlyDbError(error.message)); return; }
     setFresh(null);
-    toast.success("Token revoked");
+    toast.success(t("bridge.revoked"));
     qc.invalidateQueries({ queryKey: ["connector_token", userId, accountId] });
   }
 
@@ -55,34 +57,34 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
   return (
     <div className="rounded-lg border bg-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="flex items-center gap-2 font-medium"><PlugZap className="h-4 w-4" />MT5 bridge</h3>
+        <h3 className="flex items-center gap-2 font-medium"><PlugZap className="h-4 w-4" />{t("bridge.title")}</h3>
         <Badge variant="outline" className={cn("font-mono", stateClass[conn])}>{conn}</Badge>
       </div>
       <p className="mt-1 text-xs text-muted-foreground">
         {h
-          ? `Last report ${new Date(h.last_heartbeat_at).toLocaleTimeString()} · EA ${h.ea_version ?? "?"} · terminal ${h.terminal_connected ? "connected" : "disconnected"} · trading ${h.trade_allowed ? "allowed" : "not allowed"}`
-          : "The bridge has never reported for this account."}
+          ? `${t("bridge.last")} ${new Date(h.last_heartbeat_at).toLocaleTimeString()} · EA ${h.ea_version ?? "?"} · ${t("bridge.terminal")} ${t(h.terminal_connected ? "bridge.connected" : "bridge.disconnected")} · ${t("bridge.trading")} ${t(h.trade_allowed ? "bridge.allowed" : "bridge.notAllowed")}`
+          : t("bridge.never")}
       </p>
 
       <div className="mt-4 space-y-3 text-sm">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-muted-foreground">Token:</span>
-          <span className="font-mono text-xs">{token ? `${token.token_prefix}…` : "none"}</span>
+          <span className="text-muted-foreground">{t("bridge.token")}:</span>
+          <span className="font-mono text-xs">{token ? `${token.token_prefix}…` : t("bridge.none")}</span>
           <Button size="sm" variant="outline" disabled={busy || readOnly} onClick={issue}>
-            <KeyRound className="mr-2 h-4 w-4" />{token ? "Replace token" : "Create token"}
+            <KeyRound className="mr-2 h-4 w-4" />{t(token ? "bridge.replace" : "bridge.create")}
           </Button>
           {token && (
-            <Button size="sm" variant="ghost" disabled={busy || readOnly} onClick={revoke}>Revoke</Button>
+            <Button size="sm" variant="ghost" disabled={busy || readOnly} onClick={revoke}>{t("bridge.revoke")}</Button>
           )}
         </div>
 
         {fresh && (
           <div className="rounded-md border border-primary/40 bg-muted p-3">
-            <p className="text-xs font-medium">Copy this token now — it will not be shown again.</p>
+            <p className="text-xs font-medium">{t("bridge.copyNow")}</p>
             <div className="mt-2 flex items-center gap-2">
               <code className="min-w-0 flex-1 break-all font-mono text-xs">{fresh}</code>
               <Button size="icon" variant="ghost" aria-label="Copy token"
-                onClick={() => { navigator.clipboard.writeText(fresh); toast.success("Token copied"); }}>
+                onClick={() => { navigator.clipboard.writeText(fresh); toast.success(t("bridge.copied")); }}>
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
@@ -90,15 +92,15 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
         )}
 
         <ol className="list-decimal space-y-1 pl-5 text-xs text-muted-foreground">
-          <li>Download the bridge file and put it in MT5 → File → Open Data Folder → MQL5/Experts, then compile it.</li>
-          <li>In MT5 → Tools → Options → Expert Advisors, allow WebRequest for <code className="break-all font-mono">{origin}</code>.</li>
-          <li>Attach the bridge to any chart and paste the token and this address into its inputs: <code className="break-all font-mono">{endpoint}</code></li>
+          <li>{t("bridge.step1")}</li>
+          <li>{t("bridge.step2")} <code className="break-all font-mono">{origin}</code>.</li>
+          <li>{t("bridge.step3")} <code className="break-all font-mono">{endpoint}</code></li>
         </ol>
         <Button size="sm" variant="outline" asChild>
-          <a href="/ea/NexoraBridge.mq5" download><Download className="mr-2 h-4 w-4" />Download bridge (MQL5)</a>
+          <a href="/ea/NexoraBridge.mq5" download><Download className="mr-2 h-4 w-4" />{t("bridge.download")}</a>
         </Button>
         <p className="text-xs text-muted-foreground">
-          The bridge only reports account status and prices. It never sends orders in this version, and your MT5 password never leaves your computer.
+          {t("bridge.safety")}
         </p>
       </div>
     </div>

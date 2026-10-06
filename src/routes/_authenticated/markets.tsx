@@ -7,6 +7,7 @@ import { accountsQuery } from "@/lib/accounts";
 import { connectionState, healthQuery, quoteQuality, quotesQuery } from "@/lib/market-data";
 import type { HealthState } from "@/lib/control-plane";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/markets")({
   head: () => ({
@@ -43,6 +44,7 @@ function useNow(ms = 1000) {
 function MarketsPage() {
   const { user } = Route.useRouteContext();
   const now = useNow();
+  const { t } = useI18n();
   const { data: accounts = [] } = useQuery(accountsQuery(user.id));
   const { data: health = [] } = useQuery(healthQuery(user.id));
   const { data: quotes = [] } = useQuery(quotesQuery(user.id));
@@ -50,11 +52,11 @@ function MarketsPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <PageHeader title="Markets" subtitle="Prices reported by the bridge on your MT5 terminals. Anything not fresh is marked not live." />
+      <PageHeader title={t("nav.markets")} subtitle={t("markets.subtitle")} />
 
       {active.length === 0 && (
         <p className="rounded-lg border bg-card p-5 text-sm text-muted-foreground">
-          No accounts yet. <Link to="/accounts" className="underline">Link an MT5 account</Link> and install the bridge.
+          {t("markets.none")} <Link to="/accounts" className="underline">{t("markets.link")}</Link> {t("markets.install")}
         </p>
       )}
 
@@ -69,7 +71,7 @@ function MarketsPage() {
                 <h2 className="font-medium">{a.label}</h2>
                 <p className="font-mono text-xs text-muted-foreground">
                   {a.brokers?.name} · {a.mt5_login}
-                  {h ? ` · last heartbeat ${Math.round((now - new Date(h.last_heartbeat_at).getTime()) / 1000)}s ago` : " · never connected"}
+                  {h ? ` · ${t("markets.lastHb")} ${Math.round((now - new Date(h.last_heartbeat_at).getTime()) / 1000)}${t("markets.ago")}` : ` · ${t("markets.never")}`}
                 </p>
               </div>
               <Badge variant="outline" className={cn("font-mono", stateClass(conn))}>{conn}</Badge>
@@ -77,7 +79,7 @@ function MarketsPage() {
 
             {rows.length === 0 ? (
               <p className="p-4 text-sm text-muted-foreground">
-                No prices received yet. Install the bridge from the Accounts page and attach it to a chart.
+                {t("markets.noPrices")}
               </p>
             ) : (
               <ul className="divide-y">
@@ -99,10 +101,10 @@ function MarketsPage() {
                       <div className="font-mono text-xs text-muted-foreground">spread {q.spread_points}</div>
                       <div className="col-span-2 sm:col-span-1">
                         {v.ok ? (
-                          <Badge variant="outline" className={stateClass("HEALTHY")}>LIVE</Badge>
+                          <Badge variant="outline" className={stateClass("HEALTHY")}>{t("markets.live")}</Badge>
                         ) : (
-                          <Badge variant="outline" className={stateClass("OFFLINE")} title={v.reasons.join(", ")}>
-                            NOT LIVE · {v.reasons[0]}
+                          <Badge variant="outline" className={stateClass("OFFLINE")} title={v.reasons.map((r) => t(r)).join(", ")}>
+                            {t("markets.notLive")} · {v.reasons[0] ? t(v.reasons[0]) : ""}
                           </Badge>
                         )}
                       </div>

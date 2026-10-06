@@ -26,7 +26,8 @@ export function connectionState(h: Pick<AccountHealth, "last_heartbeat_at" | "te
   return "HEALTHY";
 }
 
-export type QuoteVerdict = { ok: boolean; reasons: string[] };
+export type QualityReason = "q.conn" | "q.stale" | "q.closed" | "q.invalid" | "q.spread";
+export type QuoteVerdict = { ok: boolean; reasons: QualityReason[] };
 
 /** Quality gate: a quote may feed analysis/trading only when every check passes. */
 export function quoteQuality(
@@ -35,12 +36,12 @@ export function quoteQuality(
   opts: { now?: number; maxSpreadPoints?: number } = {},
 ): QuoteVerdict {
   const now = opts.now ?? Date.now();
-  const reasons: string[] = [];
-  if (conn !== "HEALTHY") reasons.push(`Connection ${conn.toLowerCase()}`);
-  if (now - new Date(q.received_at).getTime() > QUOTE_FRESH_MS) reasons.push("Price stale");
-  if (now - new Date(q.tick_time).getTime() > 5 * 60_000) reasons.push("No ticks for 5 min (market may be closed)");
-  if (!(Number(q.bid) > 0) || !(Number(q.ask) > 0) || Number(q.ask) < Number(q.bid)) reasons.push("Invalid bid/ask");
-  if (q.spread_points > (opts.maxSpreadPoints ?? DEFAULT_MAX_SPREAD_POINTS)) reasons.push("Spread too wide");
+  const reasons: QualityReason[] = [];
+  if (conn !== "HEALTHY") reasons.push("q.conn");
+  if (now - new Date(q.received_at).getTime() > QUOTE_FRESH_MS) reasons.push("q.stale");
+  if (now - new Date(q.tick_time).getTime() > 5 * 60_000) reasons.push("q.closed");
+  if (!(Number(q.bid) > 0) || !(Number(q.ask) > 0) || Number(q.ask) < Number(q.bid)) reasons.push("q.invalid");
+  if (q.spread_points > (opts.maxSpreadPoints ?? DEFAULT_MAX_SPREAD_POINTS)) reasons.push("q.spread");
   return { ok: reasons.length === 0, reasons };
 }
 

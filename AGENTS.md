@@ -20,3 +20,6 @@
 - Every table's primary key is a database-generated `uuid`; the auth user id doubles as `profiles.id`. Broker-side identifiers (MT5 login, ticket, broker symbol text) are ordinary scoped-unique text columns, never primary keys or join keys — internal keys stay unguessable and broker data stays comparable across accounts.
 - Broker credentials (passwords, API keys) are never stored in the database, logs or client state — they stay on the user's own machine running the EA.
 - Platform `admin` role is read-only across all tenants: SELECT-only RLS policies via `has_role(auth.uid(),'admin')`, no cross-tenant write policies — oversight without weakening per-user control. Admin is granted only by direct role insert, never from the UI.
+
+- The MT5 EA authenticates with a per-account connector token whose SHA-256 hash alone is stored; ingest validation and ownership checks run in a SECURITY DEFINER function callable only by service_role — the EA has no user session and the token must never be recoverable from the database.
+- The market-data quality gate lives in pure functions in `src/lib/market-data.ts` — one definition of "live" shared by every consumer and unit-tested.

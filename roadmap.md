@@ -14,7 +14,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 1. [DONE] PROJECT FOUNDATION — enable Lovable Cloud, design system, app shell (HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE)
 2. [DONE] AUTH & MULTI-USER (Phase 1; team sharing → later) — roles OWNER/ADMIN/TRADER/VIEWER, tenant isolation
 3. [DONE] BROKER & ACCOUNT MANAGER — broker capability profiles, canonical symbols, per-account risk profiles
-4. [READY: approved — we supply MQL5 EA] MT5 CONNECTOR & MARKET DATA + quality gate
+4. [DONE] MT5 CONNECTOR & MARKET DATA + quality gate (report-only bridge)
 5. [QUEUED] MARKET ANALYSIS & CHART SNAPSHOT
 6. [READY: approved — built-in AI behind abstraction] NEXORA AI INTEGRATION
 7. [QUEUED] SIGNAL & VERSIONED TRADE PLAN ENGINE
@@ -23,6 +23,9 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 10. [QUEUED] POSITIONS / JOURNAL / RECONCILIATION
 11. [QUEUED] NOTIFICATIONS (LINE/Telegram/Push/In-App) & HEALTH MONITOR
 12. [QUEUED] TESTING / SIMULATION / RELEASE (test matrix §72)
+
+## Requested tasks
+- [OPEN] i18n TH/EN: language switcher, per-user saved preference, precise trading terms (keep technical terms exact).
 
 ## Open decisions (human)
 - D1–D3 APPROVED 2026-10-06: Cloud on; we provide MQL5 EA; built-in AI via abstraction.
@@ -38,4 +41,6 @@ AI Marketplace, AI Tournament, Strategy Evolution, Autonomous Strategy Creation,
 - CP1 (Phase 1 DONE): email+Google sign-in; profiles, user_roles (OWNER default), control_state (DATA_ONLY default), audit_log; DB trigger locks AUTO/ULTIMATE modes, STOP AI TRADING never closes positions and is audited; shell nav HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE (desktop sidebar, mobile bottom bar).
 - CP2 (Phase 2 DONE): brokers catalog (9 entries incl. Custom MT5), broker_accounts (login/server/currency/demo/status, no credential columns), symbol_aliases per user+broker, risk_profiles per account with DB CHECK bounds + one-active index; ownership-immutable and owner-match triggers; default limits auto-created with each account; every change audited. Verified signed-in as qa.nexora@example.com: link → limits saved → GOLD.a→XAUUSD mapped → reload persists → pause archived → audit rows present.
 - QA sign-in created for testing: qa.nexora@example.com (confirmed). Delete via backend auth users when no longer needed.
-- NEXT: Phase 3 MT5 connector & market data — MQL5 EA bridge spec + heartbeat/quality gate.
+- CP3 (Phase 3 DONE): per-account connector tokens (sha256-hashed, one active, issue/revoke RPC, audited); POST /api/public/mt5/ingest (zod-bounded, token verified in SECURITY DEFINER connector_ingest, login must match account, older ticks never overwrite newer); account_health + market_quotes (latest only); quality gate (heartbeat 15s/60s, quote 10s, spread cap 80 pts, bid/ask sanity) with unit tests; Markets page LIVE/NOT LIVE; bridge panel + public/ea/NexoraBridge.mq5 (report-only, never trades). Verified with simulated EA posts: valid/invalid token/login mismatch; GOLD.a→XAUUSD shown LIVE, wide spread NOT LIVE.
+- Known: bridge not yet tested in a real MT5 terminal (needs user's broker). Charts/candles + chart snapshots move to Phase 5.
+- NEXT: i18n TH/EN, then Phase 6 NEXORA AI integration / Phase 5 analysis.

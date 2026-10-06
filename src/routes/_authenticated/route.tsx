@@ -4,6 +4,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { controlStateQuery, TRADING_MODES } from "@/lib/control-plane";
 import { cn } from "@/lib/utils";
+import { LanguageSwitch, useI18n, type TKey } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -16,14 +17,14 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 const NAV = [
-  { to: "/home", label: "Home", icon: Home },
-  { to: "/markets", label: "Markets", icon: LineChart },
-  { to: "/accounts", label: "Accounts", icon: Wallet },
-  { to: "/trading", label: "Trading", icon: ArrowLeftRight },
-  { to: "/ai", label: "AI", icon: Cpu },
-  { to: "/journal", label: "Journal", icon: BookOpen },
-  { to: "/more", label: "More", icon: MoreHorizontal },
-] as const;
+  { to: "/home", label: "nav.home", icon: Home },
+  { to: "/markets", label: "nav.markets", icon: LineChart },
+  { to: "/accounts", label: "nav.accounts", icon: Wallet },
+  { to: "/trading", label: "nav.trading", icon: ArrowLeftRight },
+  { to: "/ai", label: "nav.ai", icon: Cpu },
+  { to: "/journal", label: "nav.journal", icon: BookOpen },
+  { to: "/more", label: "nav.more", icon: MoreHorizontal },
+] as const satisfies readonly { to: string; label: TKey; icon: unknown }[];
 
 function Shell() {
   const { user } = Route.useRouteContext();
@@ -31,6 +32,7 @@ function Shell() {
   const navigate = useNavigate();
   const router = useRouter();
   const { data: cs } = useQuery(controlStateQuery(user.id));
+  const { t } = useI18n();
   const mode = TRADING_MODES.find((m) => m.value === cs?.trading_mode);
 
   async function signOut() {
@@ -50,14 +52,14 @@ function Shell() {
             <Link key={n.to} to={n.to}
               className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
               activeProps={{ className: "bg-sidebar-accent text-foreground" }}>
-              <n.icon className="h-4 w-4" />{n.label}
+              <n.icon className="h-4 w-4" />{t(n.label)}
             </Link>
           ))}
         </nav>
         <div className="border-t p-3 text-xs">
           <p className="truncate text-muted-foreground">{user.email}</p>
           <button onClick={signOut} className="mt-2 flex items-center gap-2 text-muted-foreground hover:text-foreground">
-            <LogOut className="h-3.5 w-3.5" />Sign out
+            <LogOut className="h-3.5 w-3.5" />{t("nav.signOut")}
           </button>
         </div>
       </aside>
@@ -66,9 +68,10 @@ function Shell() {
           <span className="font-mono text-xs font-semibold tracking-[0.2em] text-primary md:hidden">NEXORA·MT5</span>
           <div className="ml-auto flex items-center gap-2 font-mono text-xs">
             {cs?.ai_trading_halted && (
-              <span className="rounded border border-destructive/50 px-2 py-1 text-destructive">AI STOPPED</span>
+              <span className="rounded border border-destructive/50 px-2 py-1 text-destructive">{t("shell.aiStopped")}</span>
             )}
-            <span className="rounded border px-2 py-1 text-muted-foreground">MODE: {mode?.label.toUpperCase() ?? "…"}</span>
+            <LanguageSwitch className="flex rounded border p-0.5" />
+            <span className="rounded border px-2 py-1 text-muted-foreground">{t("shell.mode")}: {mode?.label.toUpperCase() ?? "…"}</span>
           </div>
         </header>
         <main className="flex-1 px-4 py-6 md:px-8"><Outlet /></main>
@@ -78,7 +81,7 @@ function Shell() {
           <Link key={n.to} to={n.to}
             className={cn("flex flex-col items-center gap-1 py-2.5 text-[10px] text-muted-foreground")}
             activeProps={{ className: "text-primary" }}>
-            <n.icon className="h-5 w-5" />{n.label}
+            <n.icon className="h-5 w-5" />{t(n.label)}
           </Link>
         ))}
       </nav>

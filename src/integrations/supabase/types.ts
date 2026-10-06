@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_health: {
+        Row: {
+          account_id: string
+          balance: number | null
+          broker_server_time: string | null
+          ea_version: string | null
+          equity: number | null
+          id: string
+          last_heartbeat_at: string
+          margin_free: number | null
+          reported_login: string | null
+          terminal_connected: boolean
+          trade_allowed: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          balance?: number | null
+          broker_server_time?: string | null
+          ea_version?: string | null
+          equity?: number | null
+          id?: string
+          last_heartbeat_at: string
+          margin_free?: number | null
+          reported_login?: string | null
+          terminal_connected?: boolean
+          trade_allowed?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          balance?: number | null
+          broker_server_time?: string | null
+          ea_version?: string | null
+          equity?: number | null
+          id?: string
+          last_heartbeat_at?: string
+          margin_free?: number | null
+          reported_login?: string | null
+          terminal_connected?: boolean
+          trade_allowed?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_health_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -148,6 +204,47 @@ export type Database = {
         }
         Relationships: []
       }
+      connector_tokens: {
+        Row: {
+          account_id: string
+          created_at: string
+          id: string
+          last_used_at: string | null
+          revoked_at: string | null
+          token_hash: string
+          token_prefix: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          id?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+          token_hash: string
+          token_prefix: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          id?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+          token_hash?: string
+          token_prefix?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connector_tokens_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       control_state: {
         Row: {
           ai_trading_halted: boolean
@@ -172,11 +269,62 @@ export type Database = {
         }
         Relationships: []
       }
+      market_quotes: {
+        Row: {
+          account_id: string
+          ask: number
+          bid: number
+          broker_symbol: string
+          canonical_symbol: string
+          digits: number | null
+          id: string
+          received_at: string
+          spread_points: number
+          tick_time: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          ask: number
+          bid: number
+          broker_symbol: string
+          canonical_symbol: string
+          digits?: number | null
+          id?: string
+          received_at?: string
+          spread_points: number
+          tick_time: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          ask?: number
+          bid?: number
+          broker_symbol?: string
+          canonical_symbol?: string
+          digits?: number | null
+          id?: string
+          received_at?: string
+          spread_points?: number
+          tick_time?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_quotes_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
           display_name: string | null
           id: string
+          language: string
           timezone: string
           updated_at: string
         }
@@ -184,6 +332,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          language?: string
           timezone?: string
           updated_at?: string
         }
@@ -191,6 +340,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          language?: string
           timezone?: string
           updated_at?: string
         }
@@ -322,12 +472,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      connector_ingest: {
+        Args: { p_payload: Json; p_token: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      issue_connector_token: { Args: { p_account_id: string }; Returns: string }
+      revoke_connector_token: {
+        Args: { p_account_id: string }
+        Returns: undefined
       }
     }
     Enums: {

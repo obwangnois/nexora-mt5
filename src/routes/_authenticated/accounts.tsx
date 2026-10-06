@@ -252,6 +252,7 @@ function RiskPanel({
   const valueFor = (f: RiskField) => draft[f.key] ?? String(profile[f.key]);
 
   async function save() {
+    if (!profile) return;
     const patch: RiskProfileUpdate = {};
     for (const f of RISK_FIELDS) {
       const raw = valueFor(f);

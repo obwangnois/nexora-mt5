@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/markets")({
   component: MarketsPage,
 });
 
-export function stateClass(s: HealthState) {
+function stateClass(s: HealthState) {
   return {
     HEALTHY: "border-primary/40 text-primary",
     DEGRADED: "border-accent-foreground/40 text-accent-foreground",
@@ -41,7 +41,7 @@ function useNow(ms = 1000) {
 }
 
 function MarketsPage() {
-  const { user } = Route.useRouteContext() as { user: { id: string } };
+  const { user } = Route.useRouteContext();
   const now = useNow();
   const { data: accounts = [] } = useQuery(accountsQuery(user.id));
   const { data: health = [] } = useQuery(healthQuery(user.id));

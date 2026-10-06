@@ -26,6 +26,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { ConnectorPanel } from "@/components/connector-panel";
 
 export const Route = createFileRoute("/_authenticated/accounts")({
   head: () => ({
@@ -206,6 +207,8 @@ function AccountDetail({
           )}
         </div>
       </div>
+
+      <ConnectorPanel userId={userId} accountId={account.id} readOnly={readOnly} />
 
       <RiskPanel
         profile={profile}

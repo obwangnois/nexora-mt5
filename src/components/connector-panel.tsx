@@ -34,7 +34,7 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
     setBusy(true);
     const { data, error } = await supabase.rpc("issue_connector_token", { p_account_id: accountId });
     setBusy(false);
-    if (error) return toast.error(friendlyDbError(error.message));
+    if (error) { toast.error(friendlyDbError(error.message)); return; }
     setFresh(data);
     qc.invalidateQueries({ queryKey: ["connector_token", userId, accountId] });
   }
@@ -44,7 +44,7 @@ export function ConnectorPanel({ userId, accountId, readOnly }: { userId: string
     setBusy(true);
     const { error } = await supabase.rpc("revoke_connector_token", { p_account_id: accountId });
     setBusy(false);
-    if (error) return toast.error(friendlyDbError(error.message));
+    if (error) { toast.error(friendlyDbError(error.message)); return; }
     setFresh(null);
     toast.success("Token revoked");
     qc.invalidateQueries({ queryKey: ["connector_token", userId, accountId] });

@@ -13,7 +13,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 ## Workstreams (dependency order)
 1. [DONE] PROJECT FOUNDATION — enable Lovable Cloud, design system, app shell (HOME/MARKETS/ACCOUNTS/TRADING/AI/JOURNAL/MORE)
 2. [DONE] AUTH & MULTI-USER (Phase 1; team sharing → later) — roles OWNER/ADMIN/TRADER/VIEWER, tenant isolation
-3. [QUEUED] BROKER & ACCOUNT MANAGER — broker capability profiles, canonical symbols, per-account risk profiles
+3. [IN PROGRESS] BROKER & ACCOUNT MANAGER — broker capability profiles, canonical symbols, per-account risk profiles
 4. [READY: approved — we supply MQL5 EA] MT5 CONNECTOR & MARKET DATA + quality gate
 5. [QUEUED] MARKET ANALYSIS & CHART SNAPSHOT
 6. [READY: approved — built-in AI behind abstraction] NEXORA AI INTEGRATION

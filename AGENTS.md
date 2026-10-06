@@ -17,3 +17,5 @@
 - Signed-in app pages live under `src/routes/_authenticated/` (client-only, `getUser()` gate); public pages at top level.
 - AI access goes through a NEXORA AI abstraction (server-only) so the built-in model can be swapped for the external NEXORA AI service.
 - Health tiles must show UNKNOWN/OFFLINE until a real heartbeat exists — never display stale or fake data as live.
+- Every table's primary key is a database-generated `uuid`; the auth user id doubles as `profiles.id`. Broker-side identifiers (MT5 login, ticket, broker symbol text) are ordinary scoped-unique text columns, never primary keys or join keys — internal keys stay unguessable and broker data stays comparable across accounts.
+- Broker credentials (passwords, API keys) are never stored in the database, logs or client state — they stay on the user's own machine running the EA.

@@ -44,6 +44,110 @@ export type Database = {
         }
         Relationships: []
       }
+      broker_accounts: {
+        Row: {
+          broker_id: string
+          created_at: string
+          currency: string
+          id: string
+          is_demo: boolean
+          label: string
+          leverage: number | null
+          mt5_login: string
+          mt5_server: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          broker_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          is_demo?: boolean
+          label: string
+          leverage?: number | null
+          mt5_login: string
+          mt5_server?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          broker_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          is_demo?: boolean
+          label?: string
+          leverage?: number | null
+          mt5_login?: string
+          mt5_server?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_accounts_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "brokers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brokers: {
+        Row: {
+          code: string
+          created_at: string
+          default_currency: string
+          id: string
+          is_active: boolean
+          lot_step: number
+          max_lot: number
+          min_lot: number
+          name: string
+          notes: string | null
+          platform: string
+          requires_ea_bridge: boolean
+          supports_hedging: boolean
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          default_currency?: string
+          id?: string
+          is_active?: boolean
+          lot_step?: number
+          max_lot?: number
+          min_lot?: number
+          name: string
+          notes?: string | null
+          platform?: string
+          requires_ea_bridge?: boolean
+          supports_hedging?: boolean
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          default_currency?: string
+          id?: string
+          is_active?: boolean
+          lot_step?: number
+          max_lot?: number
+          min_lot?: number
+          name?: string
+          notes?: string | null
+          platform?: string
+          requires_ea_bridge?: boolean
+          supports_hedging?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       control_state: {
         Row: {
           ai_trading_halted: boolean
@@ -91,6 +195,106 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      risk_profiles: {
+        Row: {
+          account_id: string
+          allow_auto_trade: boolean
+          created_at: string
+          id: string
+          is_active: boolean
+          max_daily_loss: number
+          max_drawdown_pct: number
+          max_exposure_pct: number
+          max_lot: number
+          max_open_positions: number
+          min_stop_distance_points: number
+          name: string
+          news_lock_minutes: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          allow_auto_trade?: boolean
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_daily_loss?: number
+          max_drawdown_pct?: number
+          max_exposure_pct?: number
+          max_lot?: number
+          max_open_positions?: number
+          min_stop_distance_points?: number
+          name?: string
+          news_lock_minutes?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          allow_auto_trade?: boolean
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_daily_loss?: number
+          max_drawdown_pct?: number
+          max_exposure_pct?: number
+          max_lot?: number
+          max_open_positions?: number
+          min_stop_distance_points?: number
+          name?: string
+          news_lock_minutes?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_profiles_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      symbol_aliases: {
+        Row: {
+          broker_id: string
+          broker_symbol: string
+          canonical_symbol: string
+          created_at: string
+          id: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          broker_id: string
+          broker_symbol: string
+          canonical_symbol: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          broker_id?: string
+          broker_symbol?: string
+          canonical_symbol?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "symbol_aliases_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "brokers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

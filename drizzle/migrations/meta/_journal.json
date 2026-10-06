@@ -8,6 +8,20 @@
       "when": 1791294872626,
       "tag": "0000_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791295317380,
+      "tag": "0001_phase2_broker_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791295592934,
+      "tag": "0002_fix_audit_boolean_flag",
+      "breakpoints": true
     }
   ]
 }

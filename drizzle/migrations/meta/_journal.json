@@ -29,6 +29,13 @@
       "when": 1791295921228,
       "tag": "0003_platform_admin_readonly",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791296411972,
+      "tag": "0004_phase3_mt5_connector",
+      "breakpoints": true
     }
   ]
 }

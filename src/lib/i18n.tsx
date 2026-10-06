@@ -120,9 +120,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
     localStorage.setItem(KEY, l);
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) void supabase.from("profiles").update({ language: l }).eq("id", data.user.id);
-    });
+    // The query builder is lazy: it must be awaited or the request is never sent.
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) await supabase.from("profiles").update({ language: l }).eq("id", data.user.id);
+    })();
   }, []);
 
   const t = useCallback((k: TKey) => DICTS[lang][k], [lang]);

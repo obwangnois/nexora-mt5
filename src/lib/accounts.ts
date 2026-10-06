@@ -28,7 +28,7 @@ export const brokersQuery = () =>
   queryOptions({
     queryKey: ["brokers"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("brokers").select("*").order("name");
+      const { data, error } = await supabase.from("brokers").select("*").eq("is_active", true).order("name");
       if (error) throw error;
       return (data ?? []) as Broker[];
     },

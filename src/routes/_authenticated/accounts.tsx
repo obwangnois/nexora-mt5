@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  accountsQuery, brokersQuery, formatMoney, RISK_FIELDS, riskProfilesQuery,
+  accountsQuery, brokersQuery, RISK_FIELDS, riskProfilesQuery,
   symbolAliasesQuery, ACCOUNT_STATUS_LABEL,
   type AccountWithBroker, type BrokerAccount, type RiskProfile, type RiskField,
 } from "@/lib/accounts";
@@ -529,7 +529,7 @@ function AddAccountDialog({
             <Select value={brokerId} onValueChange={(v) => {
               setBrokerId(v);
               const b = brokers.find((x) => x.id === v);
-              if (b && !currency) setCurrency(b.default_currency);
+              if (b) setCurrency(b.default_currency);
             }}>
               <SelectTrigger id="broker" className="mt-1"><SelectValue placeholder="Choose a broker" /></SelectTrigger>
               <SelectContent>

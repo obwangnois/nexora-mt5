@@ -70,6 +70,14 @@ export function friendlyDbError(message: string) {
   if (message.includes("AUTO_TRADE_LOCKED"))
     return "Auto modes stay locked until the MT5 connection and safety checks are verified.";
   if (message.includes("HALTED")) return "AI trading is stopped. Resume it before changing to auto modes.";
+  if (message.includes("OWNER_IMMUTABLE") || message.includes("OWNER_MISMATCH"))
+    return "That record belongs to a different owner and cannot be changed from here.";
+  if (message.includes("duplicate key"))
+    return "That entry is already recorded — check for a duplicate account or symbol mapping.";
+  if (message.includes("violates check constraint"))
+    return "Some values are outside the allowed range. Check each field and try again.";
+  if (message.includes("one_active") || message.includes("risk_profiles_one_active"))
+    return "This account already has an active risk profile. Deactivate it before activating another.";
   if (message.toLowerCase().includes("row-level security") || message.includes("permission"))
     return "Your role does not allow this action.";
   return message;

@@ -25,7 +25,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 12. [QUEUED] TESTING / SIMULATION / RELEASE (test matrix §72)
 
 ## Requested tasks
-- [OPEN] i18n TH/EN: language switcher, per-user saved preference, precise trading terms (keep technical terms exact).
+- [PARTIAL] i18n TH/EN: switcher in header, saved per user (profiles.language) + device; translated menu, Home, Markets, MT5 bridge panel. OPEN: Accounts risk/symbol forms, More, sign-in page, placeholder pages.
 
 ## Open decisions (human)
 - D1–D3 APPROVED 2026-10-06: Cloud on; we provide MQL5 EA; built-in AI via abstraction.
@@ -43,4 +43,4 @@ AI Marketplace, AI Tournament, Strategy Evolution, Autonomous Strategy Creation,
 - QA sign-in created for testing: qa.nexora@example.com (confirmed). Delete via backend auth users when no longer needed.
 - CP3 (Phase 3 DONE): per-account connector tokens (sha256-hashed, one active, issue/revoke RPC, audited); POST /api/public/mt5/ingest (zod-bounded, token verified in SECURITY DEFINER connector_ingest, login must match account, older ticks never overwrite newer); account_health + market_quotes (latest only); quality gate (heartbeat 15s/60s, quote 10s, spread cap 80 pts, bid/ask sanity) with unit tests; Markets page LIVE/NOT LIVE; bridge panel + public/ea/NexoraBridge.mq5 (report-only, never trades). Verified with simulated EA posts: valid/invalid token/login mismatch; GOLD.a→XAUUSD shown LIVE, wide spread NOT LIVE.
 - Known: bridge not yet tested in a real MT5 terminal (needs user's broker). Charts/candles + chart snapshots move to Phase 5.
-- NEXT: i18n TH/EN, then Phase 6 NEXORA AI integration / Phase 5 analysis.
+- NEXT: finish i18n on remaining pages, then Phase 6 NEXORA AI integration / Phase 5 analysis.

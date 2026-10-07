@@ -38,7 +38,7 @@ For WAIT/NO_TRADE set entry, stop_loss, take_profit to null. "confidence" is you
 Only use the data given; never invent news or indicators you cannot compute from the candles.`;
 
 export async function analyzeMarket(input: MarketInput): Promise<TradePlan> {
-  const key = process.env.LOVABLE_API_KEY;
+  const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new Error("AI_NOT_CONFIGURED");
   const lang = input.language === "th"
     ? "Write all free-text fields in Thai, but keep trading terms (BUY, SELL, Stop Loss, Take Profit, Entry, Spread, R:R) in English."

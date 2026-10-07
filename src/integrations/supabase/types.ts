@@ -70,6 +70,62 @@ export type Database = {
           },
         ]
       }
+      ai_analyses: {
+        Row: {
+          account_id: string
+          broker_symbol: string
+          canonical_symbol: string
+          created_at: string
+          decision: string
+          gate: Json
+          id: string
+          model: string | null
+          plan: Json
+          snapshot: Json
+          status: string
+          user_id: string
+          version: number
+        }
+        Insert: {
+          account_id: string
+          broker_symbol: string
+          canonical_symbol: string
+          created_at?: string
+          decision: string
+          gate?: Json
+          id?: string
+          model?: string | null
+          plan?: Json
+          snapshot?: Json
+          status: string
+          user_id?: string
+          version?: number
+        }
+        Update: {
+          account_id?: string
+          broker_symbol?: string
+          canonical_symbol?: string
+          created_at?: string
+          decision?: string
+          gate?: Json
+          id?: string
+          model?: string | null
+          plan?: Json
+          snapshot?: Json
+          status?: string
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_analyses_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -268,6 +324,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      market_candles: {
+        Row: {
+          account_id: string
+          broker_symbol: string
+          bucket: string
+          canonical_symbol: string
+          close: number
+          high: number
+          id: string
+          low: number
+          open: number
+          ticks: number
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          broker_symbol: string
+          bucket: string
+          canonical_symbol: string
+          close: number
+          high: number
+          id?: string
+          low: number
+          open: number
+          ticks?: number
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          broker_symbol?: string
+          bucket?: string
+          canonical_symbol?: string
+          close?: number
+          high?: number
+          id?: string
+          low?: number
+          open?: number
+          ticks?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_candles_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       market_quotes: {
         Row: {

@@ -594,6 +594,7 @@ export type Database = {
         Args: { p_account_id: string }
         Returns: undefined
       }
+      simulate_demo_feed: { Args: { p_account_id: string }; Returns: Json }
     }
     Enums: {
       app_role: "owner" | "admin" | "trader" | "viewer"

@@ -57,6 +57,13 @@
       "when": 1791332646852,
       "tag": "0007_phase5_6_candles_ai",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791433122287,
+      "tag": "0008_demo_market_feed",
+      "breakpoints": true
     }
   ]
 }

@@ -15,7 +15,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 2. [DONE] AUTH & MULTI-USER (Phase 1; team sharing → later) — roles OWNER/ADMIN/TRADER/VIEWER, tenant isolation
 3. [DONE] BROKER & ACCOUNT MANAGER — broker capability profiles, canonical symbols, per-account risk profiles
 4. [DONE] MT5 CONNECTOR & MARKET DATA + quality gate (report-only bridge)
-5. [QUEUED] MARKET ANALYSIS & CHART SNAPSHOT
+5. [PARTIAL: M1 candles + chart done] MARKET ANALYSIS & CHART SNAPSHOT
 6. [READY: approved — built-in AI behind abstraction] NEXORA AI INTEGRATION
 7. [QUEUED] SIGNAL & VERSIONED TRADE PLAN ENGINE
 8. [QUEUED] RISK, EXPOSURE, NEWS/SESSION, CIRCUIT BREAKER

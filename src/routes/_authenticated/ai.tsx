@@ -66,7 +66,7 @@ function Chart({ accountId, symbol }: { accountId: string; symbol: string }) {
   );
 }
 
-function List({ title, items }: { title: string; items?: string[] }) {
+function List({ title, items }: { title: string; items?: string[] | undefined }) {
   if (!items?.length) return null;
   return (
     <div><p className="text-xs font-medium text-muted-foreground">{title}</p>

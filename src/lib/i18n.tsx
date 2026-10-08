@@ -45,6 +45,12 @@ const en = {
   "bridge.step3": "Attach the bridge to any chart and paste the token and this address into its inputs:",
   "bridge.download": "Download bridge (MQL5)",
   "bridge.safety": "The bridge only reports account status and prices. It never sends orders in this version, and your MT5 password never leaves your computer.",
+  "ai.subtitle": "NEXORA AI proposes a structured Trade Plan. It never places orders.",
+  "ai.symbol": "Symbol", "ai.analyze": "Analyze", "ai.running": "Analyzing…", "ai.noQuotes": "No prices yet — connect the MT5 bridge first.",
+  "ai.history": "Analysis history", "ai.none": "No analyses yet.", "ai.blocked": "Blocked by data quality gate",
+  "ai.confidence": "AI confidence (not win probability)", "ai.reasons": "Reasons", "ai.evidence": "Evidence", "ai.warnings": "Warnings",
+  "ai.scenario": "Scenario", "ai.invalidation": "Invalidation", "ai.expiry": "Expiry (min)", "ai.chart": "Chart (M1)", "ai.done": "Analysis saved",
+  "ai.err.MODE_DATA_ONLY": "Mode is Data only. Switch to Analysis or Signal on Home.", "ai.err.NO_QUOTE": "No price for this symbol.",
   "lang.label": "Language",
 };
 export type TKey = keyof typeof en;
@@ -88,6 +94,12 @@ const th: Record<TKey, string> = {
   "bridge.step3": "ลากตัวเชื่อมไปวางบนกราฟใดก็ได้ แล้ววางโทเคนและที่อยู่นี้ในช่อง Inputs:",
   "bridge.download": "ดาวน์โหลดตัวเชื่อม (MQL5)",
   "bridge.safety": "ตัวเชื่อมเวอร์ชันนี้ส่งแค่สถานะบัญชีและราคา ไม่ส่งออเดอร์ใดๆ และรหัสผ่าน MT5 ไม่ออกจากเครื่องของคุณ",
+  "ai.subtitle": "NEXORA AI เสนอ Trade Plan แบบมีโครงสร้าง และไม่ส่งออเดอร์เอง",
+  "ai.symbol": "สัญลักษณ์", "ai.analyze": "วิเคราะห์", "ai.running": "กำลังวิเคราะห์…", "ai.noQuotes": "ยังไม่มีราคา — เชื่อมต่อ MT5 bridge ก่อน",
+  "ai.history": "ประวัติการวิเคราะห์", "ai.none": "ยังไม่มีการวิเคราะห์", "ai.blocked": "ถูกบล็อกโดยด่านตรวจคุณภาพข้อมูล",
+  "ai.confidence": "ความมั่นใจของ AI (ไม่ใช่โอกาสชนะ)", "ai.reasons": "เหตุผล", "ai.evidence": "หลักฐาน", "ai.warnings": "คำเตือน",
+  "ai.scenario": "สถานการณ์", "ai.invalidation": "เงื่อนไขที่แผนใช้ไม่ได้", "ai.expiry": "หมดอายุ (นาที)", "ai.chart": "กราฟ (M1)", "ai.done": "บันทึกผลวิเคราะห์แล้ว",
+  "ai.err.MODE_DATA_ONLY": "โหมดเป็น Data only ให้เปลี่ยนเป็น Analysis หรือ Signal ที่หน้าหลัก", "ai.err.NO_QUOTE": "ไม่มีราคาของสัญลักษณ์นี้",
   "lang.label": "ภาษา",
 };
 

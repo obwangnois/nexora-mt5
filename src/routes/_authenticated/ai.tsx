@@ -29,6 +29,7 @@ type Plan = {
   decision?: string; entry?: number | null; stop_loss?: number | null; take_profit?: number | null; rr?: number | null;
   confidence?: number; scenario?: string; invalidation?: string; expiry_minutes?: number;
   reasons?: string[]; evidence?: string[]; warnings?: string[];
+  facts?: string[]; observations?: string[]; inferences?: string[]; assumptions?: string[];
 };
 
 function Chart({ accountId, symbol }: { accountId: string; symbol: string }) {
@@ -158,8 +159,12 @@ function AiPage() {
                     <p className="text-sm">{t("ai.confidence")}: <b>{p.confidence}</b></p>
                     {p.scenario && <p className="text-sm"><span className="text-muted-foreground">{t("ai.scenario")}: </span>{p.scenario}</p>}
                     {p.invalidation && <p className="text-sm"><span className="text-muted-foreground">{t("ai.invalidation")}: </span>{p.invalidation}</p>}
-                    <List title={t("ai.reasons")} items={p.reasons} />
+                    <List title={t("ai.facts")} items={p.facts} />
+                    <List title={t("ai.observations")} items={p.observations} />
                     <List title={t("ai.evidence")} items={p.evidence} />
+                    <List title={t("ai.inferences")} items={p.inferences} />
+                    <List title={t("ai.assumptions")} items={p.assumptions} />
+                    <List title={t("ai.reasons")} items={p.reasons} />
                     <List title={t("ai.warnings")} items={p.warnings} />
                   </div>
                 )}

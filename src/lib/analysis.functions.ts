@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { connectionState, quoteQuality } from "@/lib/market-data";
-import { validatePlan } from "@/lib/trade-plan";
+import { validatePlan, validateReasoning } from "@/lib/trade-plan";
 
 // Analyze one symbol on one account. Order of gates: ownership (RLS) → mode (DB trigger)
 // → market-data quality gate → AI → deterministic plan validation → immutable versioned record.
@@ -38,16 +38,19 @@ export const analyzeSymbol = createServerFn({ method: "POST" })
       return { ok: true as const, id: row.id };
     }
 
-    const { analyzeMarket, NEXORA_AI_MODEL } = await import("@/lib/nexora-ai.server");
+    const { analyzeMarket, NEXORA_AI_MODEL, NEXORA_PROMPT_STANDARD } = await import("@/lib/nexora-ai.server");
     try {
       const plan = await analyzeMarket({
         symbol: q.canonical_symbol, digits: snapshot.digits, bid: snapshot.bid, ask: snapshot.ask,
         spread_points: q.spread_points, candles: series, language: data.language,
       });
-      const v = validatePlan(plan);
-      const finalPlan = v.ok ? { ...plan, rr: v.rr } : { ...plan, original_decision: plan.decision, decision: "NO_TRADE" as const, rr: null, warnings: [...plan.warnings, `VALIDATION: ${v.issue}`] };
+      const g = validatePlan(plan);
+      const r = validateReasoning(plan);
+      const issue = !g.ok ? g.issue : !r.ok ? r.issue : undefined;
+      const valid = !issue;
+      const finalPlan = valid ? { ...plan, rr: g.rr, standard: NEXORA_PROMPT_STANDARD } : { ...plan, standard: NEXORA_PROMPT_STANDARD, original_decision: plan.decision, decision: "NO_TRADE" as const, rr: null, warnings: [...plan.warnings, `VALIDATION: ${issue}`] };
       const { data: row, error } = await sb.from("ai_analyses")
-        .insert({ ...base, status: "completed", decision: finalPlan.decision, plan: finalPlan, gate: { ok: true, reasons: [], plan_valid: v.ok }, model: NEXORA_AI_MODEL })
+        .insert({ ...base, status: "completed", decision: finalPlan.decision, plan: finalPlan, gate: { ok: true, reasons: [], plan_valid: valid, issue: issue ?? null }, model: NEXORA_AI_MODEL })
         .select("id").single();
       if (error) return { ok: false as const, error: error.message };
       return { ok: true as const, id: row.id };

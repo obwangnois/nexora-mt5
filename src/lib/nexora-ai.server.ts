@@ -3,6 +3,8 @@
 // receives broker credentials — only prices, candles and the canonical symbol.
 import { z } from "zod";
 
+const item = z.string().max(600);
+const list = z.array(item).max(8);
 export const tradePlanSchema = z.object({
   decision: z.enum(["BUY", "SELL", "WAIT", "NO_TRADE"]),
   entry: z.number().nullable(),
@@ -12,10 +14,13 @@ export const tradePlanSchema = z.object({
   expiry_minutes: z.number().int().min(1).max(1440),
   confidence: z.number().min(0).max(100),
   scenario: z.string().max(1200),
-  reasons: z.array(z.string().max(600)).max(8),
-  evidence: z.array(z.string().max(600)).max(8),
-  assumptions: z.array(z.string().max(600)).max(8),
-  warnings: z.array(z.string().max(600)).max(8),
+  facts: list,
+  observations: list,
+  evidence: list,
+  inferences: list,
+  assumptions: list,
+  reasons: list,
+  warnings: list,
 });
 export type TradePlan = z.infer<typeof tradePlanSchema>;
 
@@ -30,25 +35,45 @@ export type MarketInput = {
 };
 
 export const NEXORA_AI_MODEL = "openai/gpt-6-astra";
+export const NEXORA_PROMPT_STANDARD = "UNIVERSAL-AI-MASTER-v3.0";
 
-const SYSTEM = `You are NEXORA AI, a disciplined market analyst for MT5.
-You produce ONE structured trade plan proposal. You never execute trades; a deterministic risk engine and the user decide.
-Rules: prefer WAIT or NO_TRADE when evidence is weak. For BUY: stop_loss < entry < take_profit. For SELL: take_profit < entry < stop_loss.
-For WAIT/NO_TRADE set entry, stop_loss, take_profit to null. "confidence" is your analytical confidence (0-100), NOT a win probability.
-Only use the data given; never invent news or indicators you cannot compute from the candles.`;
+// Universal AI Master Prompt (University Standard v3.0) — core reasoning discipline.
+const SYSTEM = `You are NEXORA AI, a disciplined market analyst for MT5, operating under the
+UNIVERSAL AI MASTER PROMPT (University Standard v3.0).
+
+ROLE & LIMITS
+- You produce ONE structured trade plan PROPOSAL. You never execute trades or send orders.
+- Every output is passed to a deterministic Risk Gate and the user; they are the final authority.
+
+EPISTEMIC DISCIPLINE (strictly separate; never mix categories)
+- facts: values given verbatim in the input (prices, spread, digits, candle OHLC). No interpretation.
+- observations: directly countable/measurable patterns from the candles (e.g. "last 10 closes rose 7 times", "range high 2351.2").
+- evidence: observations that specifically support or contradict the decision, each stating which.
+- inferences: conclusions drawn from evidence, phrased as "suggests"/"may", never as certainty.
+- assumptions: anything taken as true without data (e.g. liquidity, no news). State them explicitly.
+- Never present an inference or assumption as a fact. Never invent news, fundamentals or indicators you cannot compute from the given candles.
+
+DECISION RULES
+- Prefer WAIT or NO_TRADE when evidence is weak, mixed, or contradicts itself.
+- BUY: stop_loss < entry < take_profit. SELL: take_profit < entry < stop_loss.
+- WAIT/NO_TRADE: entry, stop_loss, take_profit are null.
+- "confidence" (0-100) is your analytical confidence in the reasoning quality. It is NOT a win probability,
+  NOT a chance of profit, and must never be described as such anywhere in the text.
+- warnings: list data limits (e.g. single timeframe, short history) and risks honestly.`;
 
 const str = { type: "string" };
 const arr = { type: "array", items: str };
 const num = { type: ["number", "null"] };
+const LISTS = ["facts", "observations", "evidence", "inferences", "assumptions", "reasons", "warnings"] as const;
 const PLAN_JSON_SCHEMA = {
   type: "object", additionalProperties: false,
   properties: {
     decision: { type: "string", enum: ["BUY", "SELL", "WAIT", "NO_TRADE"] },
     entry: num, stop_loss: num, take_profit: num, invalidation: str,
     expiry_minutes: { type: "integer" }, confidence: { type: "number" }, scenario: str,
-    reasons: arr, evidence: arr, assumptions: arr, warnings: arr,
+    ...Object.fromEntries(LISTS.map((k) => [k, arr])),
   },
-  required: ["decision", "entry", "stop_loss", "take_profit", "invalidation", "expiry_minutes", "confidence", "scenario", "reasons", "evidence", "assumptions", "warnings"],
+  required: ["decision", "entry", "stop_loss", "take_profit", "invalidation", "expiry_minutes", "confidence", "scenario", ...LISTS],
 };
 
 export async function analyzeMarket(input: MarketInput): Promise<TradePlan> {

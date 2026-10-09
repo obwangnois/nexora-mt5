@@ -590,6 +590,10 @@ export type Database = {
         Returns: boolean
       }
       issue_connector_token: { Args: { p_account_id: string }; Returns: string }
+      log_security_event: {
+        Args: { p_action: string; p_details?: Json }
+        Returns: undefined
+      }
       revoke_connector_token: {
         Args: { p_account_id: string }
         Returns: undefined

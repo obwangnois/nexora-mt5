@@ -36,6 +36,7 @@ function Shell() {
   const mode = TRADING_MODES.find((m) => m.value === cs?.trading_mode);
 
   async function signOut() {
+    await logSecurityEvent("AUTH_LOGOUT");
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();

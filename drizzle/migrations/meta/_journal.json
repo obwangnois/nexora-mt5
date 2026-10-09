@@ -64,6 +64,13 @@
       "when": 1791433122287,
       "tag": "0008_demo_market_feed",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791505860655,
+      "tag": "0009_security_events",
+      "breakpoints": true
     }
   ]
 }

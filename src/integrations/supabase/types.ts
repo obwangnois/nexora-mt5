@@ -325,6 +325,155 @@ export type Database = {
         }
         Relationships: []
       }
+      execution_events: {
+        Row: {
+          created_at: string
+          details: Json
+          from_state: string | null
+          id: string
+          order_id: string
+          to_state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json
+          from_state?: string | null
+          id?: string
+          order_id: string
+          to_state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json
+          from_state?: string | null
+          id?: string
+          order_id?: string
+          to_state?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "execution_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_orders: {
+        Row: {
+          account_id: string
+          acked_at: string | null
+          analysis_id: string
+          approved_at: string | null
+          broker_symbol: string
+          broker_ticket: string | null
+          canonical_symbol: string
+          created_at: string
+          digits: number | null
+          direction: string
+          fill_price: number | null
+          fill_volume: number | null
+          filled_at: string | null
+          gate: Json
+          id: string
+          idempotency_key: string
+          latency_ms: number | null
+          max_slippage_points: number
+          reason: string | null
+          requested_price: number | null
+          retcode: number | null
+          sent_at: string | null
+          slippage_points: number | null
+          state: string
+          stop_loss: number | null
+          take_profit: number | null
+          updated_at: string
+          user_id: string
+          volume: number
+        }
+        Insert: {
+          account_id: string
+          acked_at?: string | null
+          analysis_id: string
+          approved_at?: string | null
+          broker_symbol: string
+          broker_ticket?: string | null
+          canonical_symbol: string
+          created_at?: string
+          digits?: number | null
+          direction: string
+          fill_price?: number | null
+          fill_volume?: number | null
+          filled_at?: string | null
+          gate?: Json
+          id?: string
+          idempotency_key: string
+          latency_ms?: number | null
+          max_slippage_points?: number
+          reason?: string | null
+          requested_price?: number | null
+          retcode?: number | null
+          sent_at?: string | null
+          slippage_points?: number | null
+          state?: string
+          stop_loss?: number | null
+          take_profit?: number | null
+          updated_at?: string
+          user_id: string
+          volume: number
+        }
+        Update: {
+          account_id?: string
+          acked_at?: string | null
+          analysis_id?: string
+          approved_at?: string | null
+          broker_symbol?: string
+          broker_ticket?: string | null
+          canonical_symbol?: string
+          created_at?: string
+          digits?: number | null
+          direction?: string
+          fill_price?: number | null
+          fill_volume?: number | null
+          filled_at?: string | null
+          gate?: Json
+          id?: string
+          idempotency_key?: string
+          latency_ms?: number | null
+          max_slippage_points?: number
+          reason?: string | null
+          requested_price?: number | null
+          retcode?: number | null
+          sent_at?: string | null
+          slippage_points?: number | null
+          state?: string
+          stop_loss?: number | null
+          take_profit?: number | null
+          updated_at?: string
+          user_id?: string
+          volume?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_orders_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "execution_orders_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "ai_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       market_candles: {
         Row: {
           account_id: string
@@ -578,10 +727,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cancel_execution: { Args: { p_order_id: string }; Returns: Json }
       connector_ingest: {
         Args: { p_payload: Json; p_token: string }
         Returns: Json
       }
+      connector_pull_orders: { Args: { p_token: string }; Returns: Json }
+      connector_report_order: {
+        Args: { p_payload: Json; p_token: string }
+        Returns: Json
+      }
+      execution_sweep: { Args: { p_account_id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -593,6 +749,14 @@ export type Database = {
       log_security_event: {
         Args: { p_action: string; p_details?: Json }
         Returns: undefined
+      }
+      request_execution: {
+        Args: {
+          p_analysis_id: string
+          p_idempotency_key: string
+          p_volume: number
+        }
+        Returns: Json
       }
       revoke_connector_token: {
         Args: { p_account_id: string }

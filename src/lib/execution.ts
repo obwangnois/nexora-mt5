@@ -37,6 +37,6 @@ export const reportSchema = z.object({
 export function ordersToLines(orders: Array<Record<string, unknown>>): string {
   const v = (x: unknown) => (x === null || x === undefined ? "" : String(x));
   return orders
-    .map((o) => [o.mode, o.id, o.broker_symbol, o.direction, o.volume, o.stop_loss, o.take_profit, o.max_slippage_points].map(v).join("|"))
+    .map((o) => ["mode", "id", "broker_symbol", "direction", "volume", "stop_loss", "take_profit", "max_slippage_points"].map((k) => o[k]).map(v).join("|"))
     .join("\n");
 }

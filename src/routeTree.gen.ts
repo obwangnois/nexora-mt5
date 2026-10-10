@@ -20,6 +20,8 @@ import { Route as AuthenticatedMarketsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedMoreRouteImport } from './routes/_authenticated/more'
 import { Route as AuthenticatedTradingRouteImport } from './routes/_authenticated/trading'
 import { Route as ApiPublicMt5IngestRouteImport } from './routes/api/public/mt5/ingest'
+import { Route as ApiPublicMt5OrdersRouteImport } from './routes/api/public/mt5/orders'
+import { Route as ApiPublicMt5ReportRouteImport } from './routes/api/public/mt5/report'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -75,6 +77,16 @@ const ApiPublicMt5IngestRoute = ApiPublicMt5IngestRouteImport.update({
   path: '/api/public/mt5/ingest',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMt5OrdersRoute = ApiPublicMt5OrdersRouteImport.update({
+  id: '/api/public/mt5/orders',
+  path: '/api/public/mt5/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicMt5ReportRoute = ApiPublicMt5ReportRouteImport.update({
+  id: '/api/public/mt5/report',
+  path: '/api/public/mt5/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -87,6 +99,8 @@ export interface FileRoutesByFullPath {
   '/more': typeof AuthenticatedMoreRoute
   '/trading': typeof AuthenticatedTradingRoute
   '/api/public/mt5/ingest': typeof ApiPublicMt5IngestRoute
+  '/api/public/mt5/orders': typeof ApiPublicMt5OrdersRoute
+  '/api/public/mt5/report': typeof ApiPublicMt5ReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,6 +113,8 @@ export interface FileRoutesByTo {
   '/more': typeof AuthenticatedMoreRoute
   '/trading': typeof AuthenticatedTradingRoute
   '/api/public/mt5/ingest': typeof ApiPublicMt5IngestRoute
+  '/api/public/mt5/orders': typeof ApiPublicMt5OrdersRoute
+  '/api/public/mt5/report': typeof ApiPublicMt5ReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,6 +129,8 @@ export interface FileRoutesById {
   '/_authenticated/more': typeof AuthenticatedMoreRoute
   '/_authenticated/trading': typeof AuthenticatedTradingRoute
   '/api/public/mt5/ingest': typeof ApiPublicMt5IngestRoute
+  '/api/public/mt5/orders': typeof ApiPublicMt5OrdersRoute
+  '/api/public/mt5/report': typeof ApiPublicMt5ReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +145,8 @@ export interface FileRouteTypes {
     | '/more'
     | '/trading'
     | '/api/public/mt5/ingest'
+    | '/api/public/mt5/orders'
+    | '/api/public/mt5/report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,6 +159,8 @@ export interface FileRouteTypes {
     | '/more'
     | '/trading'
     | '/api/public/mt5/ingest'
+    | '/api/public/mt5/orders'
+    | '/api/public/mt5/report'
   id:
     | '__root__'
     | '/'
@@ -152,6 +174,8 @@ export interface FileRouteTypes {
     | '/_authenticated/more'
     | '/_authenticated/trading'
     | '/api/public/mt5/ingest'
+    | '/api/public/mt5/orders'
+    | '/api/public/mt5/report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -159,6 +183,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ApiPublicMt5IngestRoute: typeof ApiPublicMt5IngestRoute
+  ApiPublicMt5OrdersRoute: typeof ApiPublicMt5OrdersRoute
+  ApiPublicMt5ReportRoute: typeof ApiPublicMt5ReportRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -240,6 +266,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMt5IngestRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/mt5/orders': {
+      id: '/api/public/mt5/orders'
+      path: '/api/public/mt5/orders'
+      fullPath: '/api/public/mt5/orders'
+      preLoaderRoute: typeof ApiPublicMt5OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/mt5/report': {
+      id: '/api/public/mt5/report'
+      path: '/api/public/mt5/report'
+      fullPath: '/api/public/mt5/report'
+      preLoaderRoute: typeof ApiPublicMt5ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -271,6 +311,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ApiPublicMt5IngestRoute: ApiPublicMt5IngestRoute,
+  ApiPublicMt5OrdersRoute: ApiPublicMt5OrdersRoute,
+  ApiPublicMt5ReportRoute: ApiPublicMt5ReportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

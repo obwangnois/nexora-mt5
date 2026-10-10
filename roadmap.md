@@ -19,7 +19,7 @@ Master Command: LOCKED (received 2026-10-06). Architecture changes require human
 6. [READY: approved — built-in AI behind abstraction] NEXORA AI INTEGRATION
 7. [QUEUED] SIGNAL & VERSIONED TRADE PLAN ENGINE
 8. [QUEUED] RISK, EXPOSURE, NEWS/SESSION, CIRCUIT BREAKER
-9. [QUEUED] EXECUTION ENGINE — safety gate, state machine, idempotency, slippage
+9. [DONE: manual approval path] EXECUTION ENGINE — DB safety gate (request_execution), state machine trigger, idempotency key + one live order per plan, UNKNOWN after 30s never resent (reconcile-only), slippage/latency capture, EA v0.2 pull/report (InpExecute off by default). OPEN: verify on a real demo account; AUTO modes stay locked.
 10. [QUEUED] POSITIONS / JOURNAL / RECONCILIATION
 11. [QUEUED] NOTIFICATIONS (LINE/Telegram/Push/In-App) & HEALTH MONITOR
 12. [QUEUED] TESTING / SIMULATION / RELEASE (test matrix §72)

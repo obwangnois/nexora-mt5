@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { controlStateQuery, TRADING_MODES } from "@/lib/control-plane";
 import { cn } from "@/lib/utils";
 import { LanguageSwitch, useI18n, type TKey } from "@/lib/i18n";
+import { logSecurityEvent } from "@/lib/security";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,

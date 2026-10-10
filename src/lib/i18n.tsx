@@ -51,6 +51,15 @@ const en = {
   "ai.confidence": "AI confidence (not win probability)", "ai.reasons": "Reasons", "ai.evidence": "Evidence", "ai.warnings": "Warnings", "ai.facts": "Facts", "ai.observations": "Observations", "ai.inferences": "Inferences", "ai.assumptions": "Assumptions",
   "ai.scenario": "Scenario", "ai.invalidation": "Invalidation", "ai.expiry": "Expiry (min)", "ai.chart": "Chart (M1)", "ai.done": "Analysis saved",
   "ai.err.MODE_DATA_ONLY": "Mode is Data only. Switch to Analysis or Signal on Home.", "ai.err.NO_QUOTE": "No price for this symbol.",
+  "tr.subtitle": "Approve AI Trade Plans. Every order passes the Execution Safety Gate before it reaches MT5.",
+  "tr.pending": "Trade Plans awaiting approval", "tr.noPending": "No tradeable plans in the last 15 minutes. Run Analyze on the AI page.",
+  "tr.volume": "Lot", "tr.approve": "Approve & queue", "tr.approveQ": "Send this order to the MT5 bridge?", "tr.approveBody": "The safety gate re-checks permission, risk, exposure and live prices. AI never sends orders by itself.",
+  "tr.confirm": "Confirm", "tr.cancel": "Cancel order", "tr.queue": "Bridge queue", "tr.queueEmpty": "Queue is empty.",
+  "tr.orders": "Order status", "tr.noOrders": "No orders yet.", "tr.pre": "Pre-trade", "tr.post": "Post-trade", "tr.slippage": "Slippage (pts)", "tr.latency": "Latency",
+  "tr.gate": "Safety gate", "tr.passed": "All checks passed", "tr.queued": "Order approved and queued for MT5", "tr.rejected": "Rejected by safety gate", "tr.cancelled": "Order cancelled",
+  "tr.modeNote": "Orders need Signal mode (set on Home). Data only and Analysis never execute.", "tr.unknownNote": "An order has UNKNOWN status. It will not be resent; new orders are blocked until the bridge reconciles it with the broker.",
+  "tr.eaNote": "To execute, set InpExecute = true in NexoraBridge v0.2 (download again from Accounts). Use a demo account first.",
+  "tr.expires": "expires in", "tr.min": "min",
   "lang.label": "Language",
 };
 export type TKey = keyof typeof en;
@@ -100,6 +109,15 @@ const th: Record<TKey, string> = {
   "ai.confidence": "ความมั่นใจของ AI (ไม่ใช่โอกาสชนะ)", "ai.reasons": "เหตุผล", "ai.evidence": "หลักฐาน", "ai.warnings": "คำเตือน", "ai.facts": "ข้อเท็จจริง (Fact)", "ai.observations": "สิ่งที่สังเกตได้ (Observation)", "ai.inferences": "การอนุมาน (Inference)", "ai.assumptions": "สมมติฐาน (Assumption)",
   "ai.scenario": "สถานการณ์", "ai.invalidation": "เงื่อนไขที่แผนใช้ไม่ได้", "ai.expiry": "หมดอายุ (นาที)", "ai.chart": "กราฟ (M1)", "ai.done": "บันทึกผลวิเคราะห์แล้ว",
   "ai.err.MODE_DATA_ONLY": "โหมดเป็น Data only ให้เปลี่ยนเป็น Analysis หรือ Signal ที่หน้าหลัก", "ai.err.NO_QUOTE": "ไม่มีราคาของสัญลักษณ์นี้",
+  "tr.subtitle": "อนุมัติ Trade Plan จาก AI ทุกคำสั่งต้องผ่าน Execution Safety Gate ก่อนถึง MT5",
+  "tr.pending": "Trade Plan ที่รออนุมัติ", "tr.noPending": "ไม่มีแผนที่เทรดได้ใน 15 นาทีล่าสุด ให้กด Analyze ที่หน้า AI",
+  "tr.volume": "Lot", "tr.approve": "อนุมัติและส่งเข้าคิว", "tr.approveQ": "ส่งคำสั่งนี้ไปยัง MT5 bridge ใช่ไหม?", "tr.approveBody": "ระบบจะตรวจสิทธิ์ ความเสี่ยง Exposure และราคาสดอีกครั้ง AI ไม่ส่งคำสั่งเอง",
+  "tr.confirm": "ยืนยัน", "tr.cancel": "ยกเลิกคำสั่ง", "tr.queue": "คิวส่งไป Bridge", "tr.queueEmpty": "คิวว่าง",
+  "tr.orders": "สถานะคำสั่ง", "tr.noOrders": "ยังไม่มีคำสั่ง", "tr.pre": "ก่อนเทรด (Pre-trade)", "tr.post": "หลังเทรด (Post-trade)", "tr.slippage": "Slippage (จุด)", "tr.latency": "เวลาตอบสนอง",
+  "tr.gate": "ด่านความปลอดภัย", "tr.passed": "ผ่านทุกการตรวจ", "tr.queued": "อนุมัติแล้ว รอส่งไป MT5", "tr.rejected": "ถูกปฏิเสธโดยด่านความปลอดภัย", "tr.cancelled": "ยกเลิกคำสั่งแล้ว",
+  "tr.modeNote": "การส่งคำสั่งต้องใช้โหมด Signal (ตั้งที่หน้าหลัก) โหมด Data only และ Analysis จะไม่ส่งคำสั่ง", "tr.unknownNote": "มีคำสั่งสถานะ UNKNOWN ระบบจะไม่ส่งซ้ำ และบล็อกคำสั่งใหม่จนกว่า Bridge จะตรวจสอบกับโบรกเกอร์",
+  "tr.eaNote": "หากต้องการให้ส่งคำสั่งจริง ให้ตั้ง InpExecute = true ใน NexoraBridge v0.2 (ดาวน์โหลดใหม่ที่หน้า Accounts) ควรทดสอบกับบัญชี demo ก่อน",
+  "tr.expires": "หมดอายุใน", "tr.min": "นาที",
   "lang.label": "ภาษา",
 };
 

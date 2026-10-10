@@ -174,7 +174,7 @@ function PlanCard({ a, onDone }: { a: Analysis; onDone: () => void }) {
     setBusy(true);
     const { data, error } = await supabase.rpc("request_execution", { p_analysis_id: a.id, p_volume: Number(lot), p_idempotency_key: key });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     const r = data as { ok: boolean; fails?: string[] };
     if (r.ok) toast.success(t("tr.queued"));
     else toast.error(`${t("tr.rejected")}: ${(r.fails ?? []).join(", ")}`);
@@ -222,7 +222,7 @@ function CancelButton({ id, onDone }: { id: string; onDone: () => void }) {
   return (
     <Button size="sm" variant="ghost" onClick={async () => {
       const { data, error } = await supabase.rpc("cancel_execution", { p_order_id: id });
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if ((data as { ok: boolean }).ok) toast.success(t("tr.cancelled"));
       onDone();
     }}>{t("tr.cancel")}</Button>

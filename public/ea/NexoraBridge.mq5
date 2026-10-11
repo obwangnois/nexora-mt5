@@ -1,12 +1,12 @@
 //+------------------------------------------------------------------+
-//| NexoraBridge.mq5 — NEXORA MT5 execution bridge (v0.2)          |
+//| NexoraBridge.mq5 — NEXORA MT5 execution bridge (v0.3)          |
 //| Sends heartbeat, account snapshot and quotes to NEXORA MT5.       |
 //| Execution is OFF unless InpExecute=true. Orders come only from    |
 //| NEXORA approvals; the EA never resends an unclear order.          |
 //| Your MT5 password is never read or sent.                          |
 //+------------------------------------------------------------------+
 #property copyright "NEXORA MT5"
-#property version   "0.20"
+#property version   "0.30"
 #include <Trade/Trade.mqh>
 #property strict
 
@@ -16,7 +16,7 @@ input string InpSymbols  = "XAUUSD";                                  // Broker 
 input int    InpSeconds  = 5;                                         // Report interval (seconds, 2-60)
 input bool   InpExecute  = false;                                     // Execute NEXORA-approved orders (off = report-only)
 
-#define EA_VERSION "0.2.0"
+#define EA_VERSION "0.3.0"
 string g_symbols[];
 int    g_fail = 0;
 
@@ -37,7 +37,7 @@ int OnInit()
 }
 
 void OnDeinit(const int reason) { EventKillTimer(); }
-void OnTimer() { Send(); if(InpExecute) PullOrders(); }
+void OnTimer() { Send(); SendPositions(); if(InpExecute) PullOrders(); }
 
 string Iso(datetime t)
 {
@@ -161,4 +161,39 @@ void PullOrders()
       else
          Print("NEXORA: unclear result ", rc, " for ", id, " — left for reconciliation, NOT resent");
    }
+}
+
+//+------------------------------------------------------------------+
+//| Positions snapshot (observe-only: never modifies or closes)       |
+//+------------------------------------------------------------------+
+long g_seq = 0;
+
+string Esc(string v) { StringReplace(v, "\\", "/"); StringReplace(v, "\"", "'"); return v; }
+
+void SendPositions()
+{
+   long seq = (long)TimeGMT() * 1000;
+   g_seq = seq > g_seq ? seq : g_seq + 1;          // monotonic, survives EA restarts
+   bool complete = true; string items = ""; int n = PositionsTotal();
+   for(int i = 0; i < n && i < 200; i++)
+   {
+      ulong tk = PositionGetTicket(i);
+      if(tk == 0 || !PositionSelectByTicket(tk)) { complete = false; continue; }
+      string sym = PositionGetString(POSITION_SYMBOL);
+      int dg = (int)SymbolInfoInteger(sym, SYMBOL_DIGITS);
+      if(items != "") items += ",";
+      items += StringFormat("{\"ticket\":\"%I64u\",\"symbol\":\"%s\",\"type\":\"%s\",\"volume\":%s,\"price_open\":%s,\"price_current\":%s,"
+         "\"sl\":%s,\"tp\":%s,\"profit\":%s,\"swap\":%s,\"magic\":\"%I64d\",\"comment\":\"%s\",\"time\":\"%s\"}",
+         tk, Esc(sym), PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY ? "BUY" : "SELL",
+         Num(PositionGetDouble(POSITION_VOLUME), 2), Num(PositionGetDouble(POSITION_PRICE_OPEN), dg),
+         Num(PositionGetDouble(POSITION_PRICE_CURRENT), dg), Num(PositionGetDouble(POSITION_SL), dg),
+         Num(PositionGetDouble(POSITION_TP), dg), Num(PositionGetDouble(POSITION_PROFIT), 2),
+         Num(PositionGetDouble(POSITION_SWAP), 2), PositionGetInteger(POSITION_MAGIC),
+         StringSubstr(Esc(PositionGetString(POSITION_COMMENT)), 0, 64), Iso((datetime)PositionGetInteger(POSITION_TIME)));
+   }
+   if(n > 200) complete = false;
+   string body = StringFormat("{\"login\":\"%I64d\",\"seq\":%I64d,\"complete\":%s,\"terminal_connected\":%s,\"positions\":[%s]}",
+      AccountInfoInteger(ACCOUNT_LOGIN), g_seq, Bool(complete), Bool(TerminalInfoInteger(TERMINAL_CONNECTED) != 0), items);
+   int code; string res = Post(Url("/positions"), body, code);
+   if(code != 200) Print("NEXORA: positions sync failed ", code, " ", res);   // cloud keeps last state as STALE
 }

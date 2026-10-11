@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-auth";
 import { canCancel, IN_QUEUE, type ExecState } from "@/lib/execution";
 import { useI18n } from "@/lib/i18n";
+import { syncStatus, type SyncStatus } from "@/lib/positions";
 import type { Database } from "@/integrations/supabase/types";
 
 type Order = Database["public"]["Tables"]["execution_orders"]["Row"];
@@ -90,6 +91,8 @@ function TradingPage() {
         <Notice>{t("tr.eaNote")}</Notice>
       </div>
 
+      <PositionsSection uid={uid} />
+
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">{t("tr.pending")}</h2>
         {pending.length === 0 ? <p className="text-sm text-muted-foreground">{t("tr.noPending")}</p> : (
@@ -153,6 +156,75 @@ function TradingPage() {
         )}
       </section>
     </div>
+  );
+}
+
+function PositionsSection({ uid }: { uid?: string }) {
+  const { t } = useI18n();
+  const { data } = useQuery({
+    queryKey: ["positions", uid], enabled: !!uid, refetchInterval: 3_000,
+    queryFn: async () => {
+      const [p, s, e] = await Promise.all([
+        supabase.from("positions").select("*").eq("user_id", uid!).eq("state", "OPEN").order("opened_at", { ascending: false }),
+        supabase.from("position_sync_state").select("*").eq("user_id", uid!),
+        supabase.from("reconciliation_events").select("*").eq("user_id", uid!).order("created_at", { ascending: false }).limit(15),
+      ]);
+      return { positions: p.data ?? [], sync: s.data ?? [], events: e.data ?? [] };
+    },
+  });
+  const positions = data?.positions ?? [];
+  const syncByAcc = new Map((data?.sync ?? []).map((s) => [s.account_id, syncStatus(s)]));
+  const overall: SyncStatus = (data?.sync ?? []).length === 0 ? "UNKNOWN"
+    : [...syncByAcc.values()].every((s) => s === "SYNCED") ? "SYNCED"
+    : [...syncByAcc.values()].includes("STALE") ? "STALE" : [...syncByAcc.values()].includes("UNKNOWN") ? "UNKNOWN" : "PENDING";
+  const pl = positions.reduce((a, p) => a + Number(p.profit ?? 0) + Number(p.swap ?? 0), 0);
+  const lots = positions.reduce((a, p) => a + Number(p.volume), 0);
+
+  return (
+    <section className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-lg font-semibold">{t("tr.positions")}</h2>
+        <Badge variant={overall === "SYNCED" ? "default" : overall === "STALE" ? "destructive" : "secondary"}>{overall}</Badge>
+        <span className="text-sm text-muted-foreground">{positions.length} · Lot {lots.toFixed(2)} · P/L <span className={pl < 0 ? "text-destructive" : ""}>{pl.toFixed(2)}</span></span>
+      </div>
+      <p className="text-xs text-muted-foreground">{t("tr.syncNote")}</p>
+      {positions.length === 0 ? <p className="text-sm text-muted-foreground">{t("tr.noPositions")}</p> : (
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 text-left text-xs text-muted-foreground">
+              <tr><th className="p-2">Ticket</th><th className="p-2">Symbol</th><th className="p-2">Lot</th><th className="p-2">Open / Now</th><th className="p-2">SL / TP</th><th className="p-2">P/L</th><th className="p-2">Origin</th><th className="p-2">Sync</th></tr>
+            </thead>
+            <tbody>
+              {positions.map((p) => {
+                const s = syncByAcc.get(p.account_id) ?? "UNKNOWN";
+                return (
+                  <tr key={p.id} className="border-t border-border">
+                    <td className="p-2 font-mono text-xs">#{p.ticket}</td>
+                    <td className="p-2 whitespace-nowrap"><Badge variant={p.direction === "BUY" ? "default" : "destructive"}>{p.direction}</Badge> {p.broker_symbol}</td>
+                    <td className="p-2 font-mono text-xs">{p.volume}</td>
+                    <td className="p-2 font-mono text-xs whitespace-nowrap">{p.open_price} / {p.current_price ?? "—"}</td>
+                    <td className="p-2 font-mono text-xs whitespace-nowrap">{p.stop_loss ?? "—"} / {p.take_profit ?? "—"}</td>
+                    <td className={`p-2 font-mono text-xs ${Number(p.profit) < 0 ? "text-destructive" : ""}`}>{Number(p.profit ?? 0).toFixed(2)}</td>
+                    <td className="p-2 text-xs" title={p.origin_evidence}>{p.origin}</td>
+                    <td className="p-2 text-xs"><Badge variant={s === "SYNCED" ? "outline" : "secondary"}>{s}</Badge><div className="text-muted-foreground">{new Date(p.last_seen_at).toLocaleTimeString()}</div></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <details className="rounded-md border border-border bg-card px-3 py-2 text-sm">
+        <summary className="cursor-pointer font-medium">{t("tr.recon")} ({data?.events.length ?? 0})</summary>
+        {(data?.events.length ?? 0) === 0 ? <p className="mt-2 text-muted-foreground">{t("tr.noRecon")}</p> : (
+          <ul className="mt-2 space-y-1 font-mono text-xs">
+            {data!.events.map((e) => (
+              <li key={e.id}>{new Date(e.created_at).toLocaleTimeString()} · {e.kind} · #{e.ticket} · {JSON.stringify(e.details)}</li>
+            ))}
+          </ul>
+        )}
+      </details>
+    </section>
   );
 }
 

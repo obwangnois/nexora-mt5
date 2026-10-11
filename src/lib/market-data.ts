@@ -16,7 +16,7 @@ export type ConnectorToken = Pick<
 export const HEARTBEAT_HEALTHY_MS = 15_000;
 export const HEARTBEAT_DEGRADED_MS = 60_000;
 export const QUOTE_FRESH_MS = 10_000;
-export const DEFAULT_MAX_SPREAD_POINTS = 80;
+export const DEFAULT_MAX_SPREAD_POINTS = 3000;
 
 export function connectionState(h: Pick<AccountHealth, "last_heartbeat_at" | "terminal_connected"> | null | undefined, now = Date.now()): HealthState {
   if (!h) return "UNKNOWN";

@@ -24,3 +24,4 @@
 - The MT5 EA authenticates with a per-account connector token whose SHA-256 hash alone is stored; ingest validation and ownership checks run in a SECURITY DEFINER function callable only by service_role — the EA has no user session and the token must never be recoverable from the database.
 - The market-data quality gate lives in pure functions in `src/lib/market-data.ts` — one definition of "live" shared by every consumer and unit-tested.
 - UI text goes through `src/lib/i18n.tsx` (`useI18n().t(key)`), one typed dictionary per language — a missing translation is a type error, not a silent fallback.
+- Position reconciliation is observe-and-record only in the SECURITY DEFINER `connector_sync_positions`; cloud rows close only on a complete, connected, in-order (monotonic seq) snapshot — a stale or failed feed must never look like "all closed", and nothing ever modifies broker positions.

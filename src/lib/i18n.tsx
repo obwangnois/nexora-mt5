@@ -58,7 +58,9 @@ const en = {
   "tr.orders": "Order status", "tr.noOrders": "No orders yet.", "tr.pre": "Pre-trade", "tr.post": "Post-trade", "tr.slippage": "Slippage (pts)", "tr.latency": "Latency",
   "tr.gate": "Safety gate", "tr.passed": "All checks passed", "tr.queued": "Order approved and queued for MT5", "tr.rejected": "Rejected by safety gate", "tr.cancelled": "Order cancelled",
   "tr.modeNote": "Orders need Signal mode (set on Home). Data only and Analysis never execute.", "tr.unknownNote": "An order has UNKNOWN status. It will not be resent; new orders are blocked until the bridge reconciles it with the broker.",
-  "tr.eaNote": "To execute, set InpExecute = true in NexoraBridge v0.2 (download again from Accounts). Use a demo account first.",
+  "tr.positions": "Active positions", "tr.noPositions": "No open positions reported by MT5.", "tr.recon": "Reconciliation log", "tr.noRecon": "No differences detected yet.",
+  "tr.syncNote": "Positions come from NexoraBridge v0.3. SYNCED only means the latest complete MT5 snapshot is under 15s old; reconciliation never closes or changes positions.",
+  "tr.eaNote": "To execute, set InpExecute = true in NexoraBridge v0.3 (download again from Accounts). Use a demo account first.",
   "tr.expires": "expires in", "tr.min": "min",
   "lang.label": "Language",
 };
@@ -116,7 +118,9 @@ const th: Record<TKey, string> = {
   "tr.orders": "สถานะคำสั่ง", "tr.noOrders": "ยังไม่มีคำสั่ง", "tr.pre": "ก่อนเทรด (Pre-trade)", "tr.post": "หลังเทรด (Post-trade)", "tr.slippage": "Slippage (จุด)", "tr.latency": "เวลาตอบสนอง",
   "tr.gate": "ด่านความปลอดภัย", "tr.passed": "ผ่านทุกการตรวจ", "tr.queued": "อนุมัติแล้ว รอส่งไป MT5", "tr.rejected": "ถูกปฏิเสธโดยด่านความปลอดภัย", "tr.cancelled": "ยกเลิกคำสั่งแล้ว",
   "tr.modeNote": "การส่งคำสั่งต้องใช้โหมด Signal (ตั้งที่หน้าหลัก) โหมด Data only และ Analysis จะไม่ส่งคำสั่ง", "tr.unknownNote": "มีคำสั่งสถานะ UNKNOWN ระบบจะไม่ส่งซ้ำ และบล็อกคำสั่งใหม่จนกว่า Bridge จะตรวจสอบกับโบรกเกอร์",
-  "tr.eaNote": "หากต้องการให้ส่งคำสั่งจริง ให้ตั้ง InpExecute = true ใน NexoraBridge v0.2 (ดาวน์โหลดใหม่ที่หน้า Accounts) ควรทดสอบกับบัญชี demo ก่อน",
+  "tr.positions": "Positions ที่เปิดอยู่", "tr.noPositions": "MT5 ยังไม่รายงาน Position ที่เปิดอยู่", "tr.recon": "บันทึกการ Reconcile", "tr.noRecon": "ยังไม่พบความต่าง",
+  "tr.syncNote": "ข้อมูล Position มาจาก NexoraBridge v0.3 — SYNCED หมายถึงได้ snapshot ครบจาก MT5 ภายใน 15 วินาที ระบบ Reconcile จะไม่ปิดหรือแก้ Position เอง",
+  "tr.eaNote": "หากต้องการให้ส่งคำสั่งจริง ให้ตั้ง InpExecute = true ใน NexoraBridge v0.3 (ดาวน์โหลดใหม่ที่หน้า Accounts) ควรทดสอบกับบัญชี demo ก่อน",
   "tr.expires": "หมดอายุใน", "tr.min": "นาที",
   "lang.label": "ภาษา",
 };

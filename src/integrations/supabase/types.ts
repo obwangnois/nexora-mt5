@@ -574,6 +574,143 @@ export type Database = {
           },
         ]
       }
+      position_sync_state: {
+        Row: {
+          account_id: string
+          id: string
+          last_complete_at: string | null
+          last_seq: number
+          last_snapshot_at: string | null
+          last_status: string
+          open_count: number
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          id?: string
+          last_complete_at?: string | null
+          last_seq?: number
+          last_snapshot_at?: string | null
+          last_status?: string
+          open_count?: number
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          id?: string
+          last_complete_at?: string | null
+          last_seq?: number
+          last_snapshot_at?: string | null
+          last_status?: string
+          open_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "position_sync_state_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      positions: {
+        Row: {
+          account_id: string
+          broker_symbol: string
+          close_reason: string | null
+          closed_at: string | null
+          comment: string | null
+          current_price: number | null
+          direction: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          magic: string | null
+          open_price: number
+          opened_at: string | null
+          order_id: string | null
+          origin: string
+          origin_evidence: string
+          profit: number | null
+          state: string
+          stop_loss: number | null
+          swap: number | null
+          take_profit: number | null
+          ticket: string
+          user_id: string
+          volume: number
+        }
+        Insert: {
+          account_id: string
+          broker_symbol: string
+          close_reason?: string | null
+          closed_at?: string | null
+          comment?: string | null
+          current_price?: number | null
+          direction: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          magic?: string | null
+          open_price: number
+          opened_at?: string | null
+          order_id?: string | null
+          origin: string
+          origin_evidence: string
+          profit?: number | null
+          state?: string
+          stop_loss?: number | null
+          swap?: number | null
+          take_profit?: number | null
+          ticket: string
+          user_id: string
+          volume: number
+        }
+        Update: {
+          account_id?: string
+          broker_symbol?: string
+          close_reason?: string | null
+          closed_at?: string | null
+          comment?: string | null
+          current_price?: number | null
+          direction?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          magic?: string | null
+          open_price?: number
+          opened_at?: string | null
+          order_id?: string | null
+          origin?: string
+          origin_evidence?: string
+          profit?: number | null
+          state?: string
+          stop_loss?: number | null
+          swap?: number | null
+          take_profit?: number | null
+          ticket?: string
+          user_id?: string
+          volume?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "positions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "execution_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -600,6 +737,54 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      reconciliation_events: {
+        Row: {
+          account_id: string
+          created_at: string
+          details: Json
+          id: string
+          kind: string
+          position_id: string | null
+          ticket: string | null
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          details?: Json
+          id?: string
+          kind: string
+          position_id?: string | null
+          ticket?: string | null
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          kind?: string
+          position_id?: string | null
+          ticket?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reconciliation_events_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reconciliation_events_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       risk_profiles: {
         Row: {
@@ -734,6 +919,10 @@ export type Database = {
       }
       connector_pull_orders: { Args: { p_token: string }; Returns: Json }
       connector_report_order: {
+        Args: { p_payload: Json; p_token: string }
+        Returns: Json
+      }
+      connector_sync_positions: {
         Args: { p_payload: Json; p_token: string }
         Returns: Json
       }

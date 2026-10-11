@@ -159,7 +159,7 @@ function TradingPage() {
   );
 }
 
-function PositionsSection({ uid }: { uid?: string }) {
+function PositionsSection({ uid }: { uid: string | undefined }) {
   const { t } = useI18n();
   const { data } = useQuery({
     queryKey: ["positions", uid], enabled: !!uid, refetchInterval: 3_000,

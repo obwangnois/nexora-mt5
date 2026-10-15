@@ -18,7 +18,8 @@ describe("quoteQuality", () => {
   const good = { bid: 2400.1, ask: 2400.3, spread_points: 20, received_at: ago(1000), tick_time: ago(1000) };
   it("passes a fresh quote", () => expect(quoteQuality(good, "HEALTHY", { now }).ok).toBe(true));
   it("fails stale price", () => expect(quoteQuality({ ...good, received_at: ago(20_000) }, "HEALTHY", { now }).ok).toBe(false));
-  it("fails wide spread", () => expect(quoteQuality({ ...good, spread_points: 500 }, "HEALTHY", { now }).ok).toBe(false));
+  // DEFAULT_MAX_SPREAD_POINTS is 3000, so use a value above it
+  it("fails wide spread", () => expect(quoteQuality({ ...good, spread_points: 3001 }, "HEALTHY", { now }).ok).toBe(false));
   it("fails when connection not healthy", () => expect(quoteQuality(good, "OFFLINE", { now }).ok).toBe(false));
   it("fails inverted bid/ask", () => expect(quoteQuality({ ...good, ask: 2399 }, "HEALTHY", { now }).ok).toBe(false));
 });
